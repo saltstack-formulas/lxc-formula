@@ -1,0 +1,31 @@
+lxc:
+  container_profile:
+    PROFILE_NAME:
+      options:
+        arch: amd64
+        dist: ubuntu
+        release: xenial
+      template: ubuntu
+  containers:
+    CONTAINER_NAME:
+      config:
+        lxc.cap.drop: sys_time
+        lxc.start.auto: 1
+        lxc.start.delay: 5
+      interfaces:
+        eth0:
+          hwaddr: aa:bb:cc:dd:ee:ff
+          link: br0
+      network_profile:
+        NW_PROFILE_NAME
+      profile:
+        PROFILE_NAME
+  network_profile:
+    NW_PROFILE_NAME:
+      eth0:
+        flags:
+          up
+        link:
+          br0
+        type:
+          veth

@@ -1,0 +1,40 @@
+# Common configuration
+lxc.include = /usr/share/lxc/config/{{ template }}.common.conf
+
+# Container specific configuration
+lxc.rootfs.path = /var/lib/lxc/{{ name }}/rootfs
+lxc.uts.name = {{ name }}
+lxc.arch = {{ arch }}
+
+{%- for key, value in config.items() %}
+{%-   if value != None %}
+{{ key }} = {{ value }}
+{%-   endif %}
+{%- endfor %}
+
+# Network configuration
+{%- macro render_network_item(items, key, if_index) %}
+{%-   set value = items.get(key, None) %}
+{%-   if value != None %}
+lxc.net.{{ if_index }}.{{ key }} = {{ value }}
+{%-   endif %}
+{%- endmacro %}
+
+{%- for name in interfaces.keys()|sort %}
+{%-   set config = interfaces.get(name) %}
+# -- {{ name }}
+{%-   set if_index = loop.index -%}
+{%-   set items = {'type': 'veth', 'flags': 'up'} %}
+{%-   do items.update(salt['pillar.get']("lxc.network_profile:{}:{}".format(network_profile, name))) %}
+{%-   do items.update({'name': name})  %}
+{%-   do items.update(config)  %}
+{%-   set start_keys = ['type', 'name', 'flags'] %}
+{%-   for key in start_keys %}
+{{-     render_network_item(items, key, if_index) }}
+{%-   endfor %}
+{%-   for key in items.keys() %}
+{%-     if not key in start_keys %}
+{{-       render_network_item(items, key, if_index) }}
+{%-     endif %}
+{%-   endfor %}
+{% endfor %}

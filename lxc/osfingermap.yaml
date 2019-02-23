@@ -1,0 +1,4 @@
+Ubuntu-16.04:
+  version: 2
+Ubuntu-18.04:
+  version: 3

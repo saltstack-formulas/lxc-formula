@@ -1,0 +1,18 @@
+{% macro install_on_debian_lxc(name, pkg) %}
+"{{ pkg }} on LXC {{ name }}":
+  cmd.run:
+    - name: "lxc-attach --name {{name}} -- apt-get install -y {{ pkg }}"
+    - unless: "lxc-attach --name {{name}} -- dpkg -s {{ pkg }}"
+    - require:
+        - lxc: {{ name }}
+    - onchanges:
+        - lxc: {{ name }}
+{% endmacro %}
+
+{#
+
+Use like this:
+
+    {{ install_on_debian_lxc(lxc_name, pkg_name) }}
+
+#}

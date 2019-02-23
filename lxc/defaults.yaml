@@ -1,0 +1,5 @@
+default:
+  pkgs:
+    - lxc
+    - lxc-templates
+  version: 3

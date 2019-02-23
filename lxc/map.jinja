@@ -1,0 +1,12 @@
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{% import_yaml 'lxc/defaults.yaml' as default_settings %}
+{% import_yaml 'lxc/osfingermap.yaml' as osfingermap %}
+
+{% set defaults = salt['grains.filter_by'](default_settings,
+    default='default',
+    merge=salt['grains.filter_by'](osfingermap, grain='osfinger')
+) %}
+
+{% set lxc = salt['pillar.get']('lxc', default=defaults, merge=True) %}
