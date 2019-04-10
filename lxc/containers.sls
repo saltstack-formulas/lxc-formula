@@ -20,8 +20,8 @@ include:
         template: {{ salt['pillar.get']("lxc:container_profile:{}:template".format(config.get("profile"))) }}
         name: {{ name }}
         arch: amd64
-        interfaces: {{ config.get("interfaces", {}) | json_encode_dict }}
-        config: {{ config.get("config", {}) | json_encode_dict }}
+        interfaces: {{ config.get("interfaces", {}) | json }}
+        config: {{ config.get("config", {}) | json }}
         network_profile: {{ config.get("network_profile") }}
 
 "restart_lxc_{{ name }}":
