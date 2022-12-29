@@ -7,6 +7,11 @@ include:
 
 {% for name, config in lxc_pillar.get('containers', {}).items() %}
 {%   set container_profile = lxc_pillar.get('container_profile').get(config.get('profile')) %}
+lxc--containers--lxc-create--{{ name }}:
+  cmd.run:
+    - name: lxc-create -n {{ name }} --config /var/lib/lxc/{{ name }}/config --template {{ container_profile.get('template') }} 
+    - unless: lxc-info -n {{ name }}
+
 lxc--containers--lxc-present--{{ name }}:
   lxc.present:
     - name: {{ name }}
@@ -15,6 +20,8 @@ lxc--containers--lxc-present--{{ name }}:
     - network_profile: {{ config.get('network_profile') }}
     - options:
         release: {{ container_profile.get('options').get('release') }}
+    - require:
+      - cmd: lxc--containers--lxc-create--{{ name }}
 
 lxc--constainers--{{ name }}_config:
   file.managed:
@@ -28,6 +35,8 @@ lxc--constainers--{{ name }}_config:
         interfaces: {{ config.get("interfaces", {}) | json }}
         config: {{ config.get("config", {}) | json }}
         network_profile: {{ config.get("network_profile") }}
+    - require:
+      - cmd: lxc--containers--lxc-create--{{ name }}
 
 "lxc--containers--stop_lxc_{{ name }}":
   cmd.run:
@@ -35,7 +44,7 @@ lxc--constainers--{{ name }}_config:
     - onlyif: lxc-info -n siemens-repos | grep -q '^State:\s*RUNNING$'
     - onchanges:
       - file: lxc--constainers--{{ name }}_config
-      - cmd: "strong_RSA_key_{{ name }}"
+      - lxc: lxc--containers--lxc-present--{{ name }}
 
 lxc--containers--lxc-running--{{ name }}:
   lxc.running:
