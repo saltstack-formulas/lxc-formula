@@ -17,7 +17,6 @@ lxc--containers--lxc-present--{{ name }}:
     - name: {{ name }}
     - template: {{ container_profile.get('template') }}
     - profile: {{ config.get('container_profile') }}
-    - network_profile: {{ config.get('network_profile') }}
     - options:
         release: {{ container_profile.get('options').get('release') }}
     - require:
@@ -34,7 +33,6 @@ lxc--constainers--{{ name }}_config:
         arch: amd64
         interfaces: {{ config.get("interfaces", {}) | json }}
         config: {{ config.get("config", {}) | json }}
-        network_profile: {{ config.get("network_profile") }}
     - require:
       - cmd: lxc--containers--lxc-create--{{ name }}
 

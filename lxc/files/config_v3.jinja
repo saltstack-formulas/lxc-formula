@@ -25,7 +25,6 @@ lxc.net.{{ if_index }}.{{ key }} = {{ value }}
 # -- {{ name }}
 {%-   set if_index = loop.index -%}
 {%-   set items = {'type': 'veth', 'flags': 'up'} %}
-{%-   do items.update(salt['pillar.get']("lxc.network_profile:{}:{}".format(network_profile, name))) %}
 {%-   do items.update({'name': name})  %}
 {%-   do items.update(config)  %}
 {%-   set start_keys = ['type', 'name', 'flags'] %}
