@@ -39,7 +39,7 @@ lxc--constainers--{{ name }}_config:
 "lxc--containers--stop_lxc_{{ name }}":
   cmd.run:
     - name: "lxc-stop -n {{ name }}"
-    - onlyif: lxc-info -n siemens-repos | grep -q '^State:\s*RUNNING$'
+    - onlyif: lxc-info -n {{ name }} | grep -q '^State:\s*RUNNING$'
     - onchanges:
       - file: lxc--constainers--{{ name }}_config
       - lxc: lxc--containers--lxc-present--{{ name }}
@@ -47,4 +47,6 @@ lxc--constainers--{{ name }}_config:
 lxc--containers--lxc-running--{{ name }}:
   lxc.running:
     - name: {{ name }}
+    - require:
+      - cmd: "lxc--containers--stop_lxc_{{ name }}"
 {% endfor %}

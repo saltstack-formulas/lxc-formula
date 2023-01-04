@@ -12,6 +12,11 @@ lxc:
         lxc.cap.drop: sys_time
         lxc.start.auto: 1
         lxc.start.delay: 5
+      # alternative format:
+      config:
+        - 'lxc.cap.drop = sys_time'
+        - 'lxc.start.auto = 1'
+        - 'lxc.start.delay = 5'
       interfaces:
         eth0:
           hwaddr: aa:bb:cc:dd:ee:ff

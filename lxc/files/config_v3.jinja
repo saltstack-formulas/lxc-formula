@@ -6,11 +6,17 @@ lxc.rootfs.path = /var/lib/lxc/{{ name }}/rootfs
 lxc.uts.name = {{ name }}
 lxc.arch = {{ arch }}
 
-{%- for key, value in config.items() %}
-{%-   if value != None %}
+{%- if config | is_list %}
+{%-   for entry in config %}
+{{ entry }}
+{%-   endfor %}
+{%- else %}
+{%-   for key, value in config.items() %}
+{%-     if value != None %}
 {{ key }} = {{ value }}
-{%-   endif %}
-{%- endfor %}
+{%-     endif %}
+{%-   endfor %}
+{%- endif %}
 
 # Network configuration
 {%- macro render_network_item(items, key, if_index) %}
