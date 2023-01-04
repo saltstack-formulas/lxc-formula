@@ -5,8 +5,6 @@
     - unless: "lxc-attach --name {{name}} -- dpkg -s {{ pkg }}"
     - require:
         - lxc: {{ name }}
-    - onchanges:
-        - lxc: {{ name }}
 {% endmacro %}
 
 {#

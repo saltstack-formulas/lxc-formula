@@ -12,20 +12,16 @@ lxc:
         lxc.cap.drop: sys_time
         lxc.start.auto: 1
         lxc.start.delay: 5
+      # alternative format:
+      config:
+        - 'lxc.cap.drop = sys_time'
+        - 'lxc.start.auto = 1'
+        - 'lxc.start.delay = 5'
       interfaces:
         eth0:
           hwaddr: aa:bb:cc:dd:ee:ff
           link: br0
-      network_profile:
-        NW_PROFILE_NAME
+          type: veth
+          flags: up
       profile:
         PROFILE_NAME
-  network_profile:
-    NW_PROFILE_NAME:
-      eth0:
-        flags:
-          up
-        link:
-          br0
-        type:
-          veth
